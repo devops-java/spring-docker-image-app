@@ -14,7 +14,8 @@ public class TestController {
 
     @GetMapping("health")
     public String health() {
-        return "ok " + new Date();
+        return getErrorCount();
+        //return "ok " + new Date();
     }
 
     @GetMapping("host")
@@ -25,5 +26,17 @@ public class TestController {
             e.printStackTrace();
             return "no-host";
         }
+    }
+
+    private static  Integer count = 0;
+
+    // this is only for v: 1.4 liveness check
+    private String getErrorCount() {
+        if (count >= 5) {
+            throw new RuntimeException("error in health check");
+        } else {
+            count++;
+        }
+        return "ok";
     }
 }
